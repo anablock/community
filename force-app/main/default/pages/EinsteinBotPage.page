@@ -1,0 +1,32 @@
+<apex:page id="EinsteinBotPage">
+    <!--BEGIN Chat Button Code Snippet-->
+
+    <a id="liveagent_button_online_5733i000000cEeY" href="javascript://Chat" style="display: none;" onclick="liveagent.startChat('5733i000000cEeY')"><!-- Online Chat Content --></a><div id="liveagent_button_offline_5733i000000cEeY" style="display: none;"><!-- Offline Chat Content --></div><script type="text/javascript">
+    if (!window._laq) { window._laq = []; }
+        window._laq.push(function(){liveagent.showWhenOnline('5733i000000cEeY', document.getElementById('liveagent_button_online_5733i000000cEeY'));
+        liveagent.showWhenOffline('5733i000000cEeY', document.getElementById('liveagent_button_offline_5733i000000cEeY'));
+        });
+    </script>
+
+    <!--END Chat Button Code Snippet-->
+
+    <!--BEGIN Chat Deployment Code Snippet-->
+
+    <script type='text/javascript' src='https://c.la4-c2-ia2.salesforceliveagent.com/content/g/js/49.0/deployment.js'></script>
+    <script type='text/javascript'>
+
+
+        <!--BEGIN Button Event Handler-->
+
+        liveagent.addButtonEventHandler('5733i000000cEeY',function (e){
+            if(e == liveagent.BUTTON_EVENT.BUTTON_AVAILABLE){
+                liveagent.startChatWithWindow('5733i000000cEeY', window.name);
+            }
+        });
+
+        <!--END Button Event Handler-->
+            liveagent.init('https://d.la4-c2-ia2.salesforceliveagent.com/chat', '5723i000000cDzx', '00D3i000000pb00');
+     </script>
+
+    <!--END Chat Depoyment Code Snippet-->
+</apex:page>

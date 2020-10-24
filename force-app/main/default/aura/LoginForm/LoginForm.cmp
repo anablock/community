@@ -1,0 +1,132 @@
+<aura:component implements="forceCommunity:availableForAllPageTypes" access="global" >
+    <aura:attribute name="isComply" type="Boolean" default="true"/>
+    <aura:attribute name="startUrl" type="String" required="false" description="The url you go to after a successful login" default="/"/>
+    <aura:attribute name="expid" type="String" required="false" description="The branding experience ID" /> 
+    
+    <aura:attribute name="isUsernamePasswordEnabled" type="Boolean" access="private"/>
+    <aura:attribute name="isSelfRegistrationEnabled" type="Boolean" access="private"/>
+    <aura:attribute name="communityForgotPasswordUrl" type="String" access="private"/>
+    <aura:attribute name="communitySelfRegisterUrl" type="String" access="private"/>
+    
+    <aura:attribute name="showError" type="Boolean" required="true" description="" default="false" access="private"/>
+    <aura:attribute name="errorMessage" type="String" required="false" description="" access="private"/>
+    <!--ltng:require styles="{!$Resource.EDGE_Login_External  + '/assets/login-external.css'}"   
+                   
+                  /-->
+    
+    <!--aura:handler name="init" value="{!this}" action="{!c.initialize}"/-->	
+    <div>
+        <div class="slds-grid slds-wrap">
+            <div class="slds-col slds-size_1-of-1">
+                <div class="slds-grid slds-wrap">
+                    <div class="slds-col slds-size_1-of-2 bgColorf3f2f2">
+                        <div class="paddingLogo">
+                            <!--img class="logo slds-align_absolute-center" src="{}"/-->
+                        </div>
+                        <div class="boxStyle bgColorFFFFFF alignCenterBox slds-show" id="signIn">
+                            <div class="slds-form-element slds-text-heading_small aroundPadding">	
+                                <aura:renderIf isTrue="{!v.showError}">
+                                    <ui:outputRichText value="{!v.errorMessage}"/>			 
+                                </aura:renderIf>
+                                <div>
+                                    <div class="slds-form-element slds-p-bottom_medium">
+                                        <label class="slds-form-element__label color16325C fontDesk12 slds-float_left lineHeight20" for="form-element-01">Username</label>
+                                        <div class="slds-form-element__control">
+                                            <input type="text" id="username" class="slds-input height44 textFont" placeholder="" />
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="slds-form-element">
+                                        <label class="slds-form-element__label color16325C fontDesk12 slds-float_left lineHeight20" for="form-element-01">Password</label>
+                                        <div class="slds-form-element__control">
+                                            <input type="password" id="password" class="slds-input height44 textFont" placeholder="" />
+                                        </div>
+                                    </div>
+                                    
+                                    <!--div class="slds-form-element__control paddingCheckbox">
+                                        
+                                        <lightning:input type="checkbox" class="Font13 color16325C" label="By using this application, you agree to comply with all federal and state alcohol rules and regulations." checked="{!v.isComply}"/>
+                                        
+                                        <div class="slds-form-element__control">
+                                            <span class="slds-checkbox">
+                                                <input type="checkbox" name="options" id="checkbox-2" value="checkbox-2"
+                                                       onchange="{!c.checkBoxClicked}"
+                                                       checked="{!v.isComply}"/>
+                                                       
+                                                <label class="slds-checkbox__label" for="checkbox-2">
+                                                    <span class="slds-checkbox_faux"></span>
+                                                    <span class="Font13 color16325C">By using this application, you agree to comply with all federal and state alcohol rules and regulations.</span>
+                                                </label>
+                                            </span>
+                                        </div>
+
+                                    </div-->
+                                    
+                                    <div class="">
+                                        <div class="slds-grid slds-wrap slds-align_absolute-center height32">
+                                            <lightning:button label="Log In" class="slds-col slds-size-1-of-1 BgColor027F90 borderRadius ColorWhite backgroundBtnLogin fontDesk13" onclick="{!c.handleLogin}" disabled="{!!v.isComply}"/>                                            
+                                        </div>  
+                                    </div>
+                                    
+                                    <div class="slds-grid slds-wrap slds-p-top_medium">
+                                        <div class="slds-col slds-size_1-of-2">
+                                            <span class="Font12 Color027F90" style="float:left;cursor:pointer;" onclick="{!c.openForgotPass}"> Forgot Your Password?</span>
+                                        </div>
+                                    </div> 
+                                </div>
+                            </div> 
+                        </div>
+                        <div class="boxStyle bgColorFFFFFF alignCenterBox slds-hide" id="forgotPass">
+                            <div class="slds-form-element  slds-text-heading_small aroundPadding">	
+                                <aura:renderIf isTrue="{!v.showError}">
+                                    <ui:outputRichText value="{!v.errorMessage}"/>			 
+                                </aura:renderIf>					
+                                <div class="slds-form-element slds-p-bottom_medium">
+                                    <label class="slds-form-element__label color16325C fontDesk12 slds-float_left lineHeight20" for="form-element-01">Please Enter Username to Reset Password</label>
+                                    <div class="slds-form-element__control">
+                                        <input type="text" id="forgotUsername" class="slds-input height44 textFont" placeholder="" onkeyup="{!c.forgotOnKeyUp}"/>
+                                    </div>
+                                </div>	
+                                <div class="">
+                                    <div class="slds-grid slds-wrap slds-align_absolute-center height32">
+                                        <lightning:button label="Reset Password" class="slds-col slds-size-1-of-1 BgColor027F90 borderRadius ColorWhite backgroundBtnLogin fontDesk13"  onclick="{!c.handleForgotPassword}" />                                            
+                                    </div>  
+                                </div>	
+                                <div class="slds-grid slds-wrap slds-p-top_medium">
+                                    <div class="slds-col slds-size_1-of-2">
+                                        <span class="Font12 Color027F90" style="float:left; cursor:pointer;" onclick="{!c.openSignin}"> Back To Login</span>
+                                    </div>
+                                </div> 						
+                            </div>
+                        </div>
+                        
+                        <div class="boxStyle bgColorFFFFFF alignCenterBox slds-hide" id="forgotPassConfirm">
+                            <div class="slds-form-element  slds-text-heading_small aroundPadding">	
+                                <div class="slds-grid slds-wrap">
+                                    <div class="slds-col slds-size_1-of-1">
+                                        <span class="Font13 Color16325c" >Please Check Your Mail For Further Instructions.</span>
+                                    </div>
+                                    <div class="slds-col slds-size_1-of-1 slds-p-top_medium">
+                                        <span class="Font12 Color027F90" style="float:left; cursor:pointer;" onclick="{!c.openSignin}"> Back To Login</span>
+                                    </div>
+                                </div> 						
+                            </div> 						
+                        </div>				
+                        
+                        <!--div class="slds-align_absolute-center slds-p-top_large">
+                            <span class="Font12 Color213441">© 2018 Diageo. All rights reserved. | <span><a href="" onclick="{!c.openPrivacy}" class="Color027F90" id="ePriv">Privacy</a></span></span>  
+                        </div-->
+                    </div>
+                    <div class="slds-col slds-size_1-of-2">
+                        
+                        <div class="login-image-container"></div>
+                        <!--<img class="login-side-image" src="{!$Resource.Edge_LoginImage}"/>-->
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+    
+</aura:component>
