@@ -1,23 +1,14 @@
-/**
-  FaceBook Registration Handler example TEST
-
-**/ 
 @isTest
 public class SimpleFacebookRegistrationHandler_TEST {
-    
-    /**
-     * Positive test for canCreateUser where all the required information is provided
-     **/ 
+    // Positive test for canCreateUser where all the required information is provided
     testmethod public static void testCanCreateUser() {
         SimpleFacebookRegistrationHandler handler = new SimpleFacebookRegistrationHandler();
         Auth.UserData data = createUser('test@example.com','John','Adams');
         
         System.Assert(handler.canCreateUser(data),'Handler should be able to create this user');
     }
-    
-    /**
-     * Negative test for canCreateUser because insufficient detail is available
-     **/     
+
+    // Negative test for canCreateUser because insufficient detail is available
     testmethod public static void testCanCreateUserNegative() {
         SimpleFacebookRegistrationHandler handler = new SimpleFacebookRegistrationHandler();
         Auth.UserData data = createUser(null,'Thomas','Jones-Drew');
@@ -25,14 +16,10 @@ public class SimpleFacebookRegistrationHandler_TEST {
         System.Assert(!handler.canCreateUser(data),'Handler should not be able to create user with missing email');
     }
     
-    /**
-     * Scenario where we want to provision an Internal User from Facebook
-     **/ 
+    // Scenario where we want to provision an Internal User from Facebook
     testmethod public static void testCreateInternalUser() {
-        SimpleFacebookRegistrationHandler handler = new SimpleFacebookRegistrationHandler();
-        
+        SimpleFacebookRegistrationHandler handler = new SimpleFacebookRegistrationHandler();    
         Auth.UserData data = createUser('tjones@example.com','Thomas','Jones-Drew');
-        
         
         Test.startTest();
         
@@ -41,15 +28,11 @@ public class SimpleFacebookRegistrationHandler_TEST {
         Test.stopTest();
         
         validate(theUser,data);
-        
     }
     
-    /**
-     * Scenario where we don't have enough detail to create a User end-to-end
-     **/ 
+    // Scenario where we don't have enough detail to create a User end-to-end 
     testmethod public static void testCreateInternalUserNegative() {
         SimpleFacebookRegistrationHandler handler = new SimpleFacebookRegistrationHandler();
-        
         Auth.UserData data = createUser(null,'Thomas','Jones-Drew');
                 
         Test.startTest();
@@ -62,13 +45,10 @@ public class SimpleFacebookRegistrationHandler_TEST {
         
     }
     
-    /**
-     * Simple direct test of the UpdateUser method.  Create the user first 
-     * and then attempt to update some properties.
-     **/ 
+    // Simple direct test of the UpdateUser method.  Create the user first 
+    // and then attempt to update some properties. 
     testMethod public static void testUpdateUser() {
         SimpleFacebookRegistrationHandler handler = new SimpleFacebookRegistrationHandler();
-        
         Auth.UserData data = createUser('tjones@example.com','Thomas','Jones-Drew');
         User theUser = handler.createUser(null, data);
         insert theUser;
@@ -83,41 +63,28 @@ public class SimpleFacebookRegistrationHandler_TEST {
         User theUpdatedUser = [SELECT Id,firstName,Email,LastName 
                                  from User 
                                 Where Id = :theUser.id];
-        
         validate(theUpdatedUser,data);
         
         Test.stopTest();
-
     }
-
     
-    /**
-     * Simple scenario to create a Community user
-     **/ 
+    // Simple scenario to create a Community user
     testmethod public static void testCreateCommunityUser() {
         SimpleFacebookRegistrationHandler handler = new SimpleFacebookRegistrationHandler();
-        
         Auth.UserData data = createUser('tjones@example.com','Thomas','Jones-Drew');
-                
         Test.startTest();
         String theCommunityId = '00000001';
         data.attributeMap.put('sfdc_networkid',theCommunityId);
-        
         Account testAccount = new Account();
         testAccount.Name = 'Test Account';
         insert testAccount;
-        
         data.attributeMap.put('accountId',testAccount.id);
-        
         User theUser = handler.createUser(null, data);
-        
         Test.stopTest();
-        
         validate(theUser,data);
         
         // Additional validations for Community User
         System.Assert(theUser.ContactId!=null,'Contact must be set for user');
-        
     }
     
     /**
@@ -125,7 +92,8 @@ public class SimpleFacebookRegistrationHandler_TEST {
      * 
      * @param theUser - the User that we created
      * @param data - the original AuthData supplied by FaceBook
-     **/ 
+     **/
+    @isTest 
     private static void validate(User theUser, Auth.UserData data) {
         System.Assert(theUser!=null,'User must not be null');
         System.AssertEquals(theUser.email,data.email,'Email address must be the same');
@@ -133,7 +101,6 @@ public class SimpleFacebookRegistrationHandler_TEST {
         System.AssertEquals(theUser.LastName,data.LastName,'Last name must match');
     }
 
-    
     /**
      * Helper method to instantiate the handler UserData
      * 
@@ -143,19 +110,21 @@ public class SimpleFacebookRegistrationHandler_TEST {
      * @return Auth.UserData that looks like what we expect from FaceBook
      **/ 
     private static Auth.UserData createUser(String email,String lastName, String firstName) {
-         Map<String, String> attributeMap = new Map<String,String>();
-         String identifier = lastName+System.currentTimeMillis();
-         String locale = 'en_US';
-         return new Auth.UserData( identifier,
-               firstName,
-               lastName,
-              '', // fullname
-               email,
-               '', // link
-               '', // userName
-               locale,
-               '', // provider
-               '', // siteLoginUrl
-               attributeMap);       
+        Map<String, String> attributeMap = new Map<String,String>();
+        String identifier = lastName+System.currentTimeMillis();
+        String locale = 'en_US';
+        return new Auth.UserData ( 
+            identifier,
+            firstName,
+            lastName,
+            '', // fullname
+            email,
+            '', // link
+            '', // userName
+            locale,
+            '', // provider
+            '', // siteLoginUrl
+            attributeMap
+        );       
     }
 }

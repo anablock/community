@@ -50,11 +50,16 @@ global User createUser(Id portalId, Auth.UserData data){
         Id contactId;
         // To keep things modular, we're creating the Contact in a separate method
         contactId = createContact(data);
-        System.debug('Created contact: '+ contactId);
+        System.debug('Created contact: ' + contactId);
         
         // You'd likely use other logic to assign the Profile
-        Profile p = [SELECT Id FROM profile WHERE name=:EXTERNAL_USER_PROFILE];
+        Profile p = [SELECT Id FROM Profile WHERE Name=:EXTERNAL_USER_PROFILE];
         System.debug('Found profile: '+ p);
+
+        // Make sure we can update the database before even trying
+        if (!Schema.sObjectType.Profile.fields.Name.isUpdateable()) {
+            return null;
+        }
 
         // Keeping it modular, we initialize the user in another method
         User u = createUser(data,p);
@@ -103,6 +108,11 @@ global void updateUser(Id userId, Id portalId, Auth.UserData data){
             contact.accountId = data.attributemap.get('accountId');
         } else {
             List<Account> accounts = [select Id from Account where Name =:DEFAULT_ACCOUNTNAME];
+
+            // Make sure we can update the database before even trying
+            if (!Schema.sObjectType.Account.fields.Name.isUpdateable()) {
+                return null;
+            }
             System.debug('Found account: ' + accounts);
             
             contact.accountId = accounts[0].Id;            
